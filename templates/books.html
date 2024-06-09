@@ -1,0 +1,161 @@
+{% extends 'basewithnav.html' %} {% block title %}All Books{% endblock %} {%
+block body %}
+<div class="container">
+  <h1>All Books</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Copies Present</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book[1] }}</td>
+        <td>{{ book[2] }}</td>
+        <td>{{ book[5] }}</td>
+        <td>
+          <button
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#requestModal{{ book[0] }}"
+          >
+            Request
+          </button>
+        </td>
+      </tr>
+      <!-- Request Modal for Book {{ book.id }} -->
+      <div
+        class="modal fade"
+        id="requestModal{{ book[0] }}"
+        tabindex="-1"
+        aria-labelledby="requestModalLabel{{ book[0] }}"
+        aria-hidden="true"
+        data-book-id="{{ book[0] }}"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="feedbackModalLabel{{ book[0] }}">
+                Request Book - {{ book[1] }}
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <!-- Request Form -->
+              <form id="requestForm{{ book[0] }}" method="POST" action="/books">
+                <input type="hidden" name="action" value="request" />
+                <!-- Hidden input for book ID -->
+                <input type="hidden" name="book_id" value="{{ book[0] }}" />
+                <!-- Hidden input for current date -->
+                <input
+                  type="hidden"
+                  name="current_date"
+                  value="{{ current_date }}"
+                />
+                <!-- Input for till date -->
+                <div class="mb-3">
+                  <label for="requestDate{{ book[0] }}" class="form-label"
+                    >Till Date</label
+                  >
+                  <input
+                    type="input"
+                    class="form-control"
+                    id="requestDate{{ book[0] }}"
+                    value="{{ till_date }}"
+                    disabled
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                form="requestForm{{ book[0] }}"
+                class="btn btn-danger"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- Display toast message if present -->
+  {% if toast_message %}
+  <div
+    class="toast align-items-center text fixed-bottom start-50 translate-middle-x text-bg-primary border-0"
+    role="alert"
+    aria-live="polite"
+    aria-atomic="true"
+    id="liveToast"
+    style="margin-bottom: 16px"
+  >
+    <div class="d-flex">
+      <div class="toast-body" id="liveToastBody"></div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+        id="liveToastClose"
+      ></button>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Event listener for "Request" button in Request Modal
+    $("[id^=requestModal]").on("shown.bs.modal", function () {
+      var bookId = $(this).data("book-id");
+      var formId = "#requestForm" + bookId;
+
+      // Event listener for form submission
+      $(formId).submit(function (event) {
+        event.preventDefault();
+
+        // Log form data before submission
+        console.log("Request Form Data:", $(this).serialize());
+
+        // Submit the form
+        this.submit();
+      });
+    });
+  });
+
+  window.onload = function () {
+    display_toast("{{ toast_message }}");
+  };
+  function display_toast(message) {
+    const toastLiveExample = document.getElementById("liveToast");
+    const toastLiveBody = document.getElementById("liveToastBody");
+    toastLiveBody.innerText = message;
+    const toastBootstrap =
+      bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+    console.log("Toast displayed");
+  }
+</script>
+
+{% endblock %}

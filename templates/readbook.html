@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% block title %}Read Book{% endblock %} {% block body
+%}
+<body style="height: 100vh; width: auto">
+  <object
+    data="{{ url_for('render.viewBook', filename=filename) }}"
+    type="application/pdf"
+    width="100%"
+    height="100%"
+  ></object>
+</body>
+{% endblock %}

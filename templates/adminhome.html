@@ -1,0 +1,80 @@
+{% extends 'basewithnav.html' %} {% block title %}Admin{% endblock %} {% block
+body %}
+<!-- Add a personalized greeting above the container -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-center mb-4">
+      <h1 class="display-4">Welcome, {{ name }}!</h1>
+      <p class="lead">
+        You're now logged in as an admin. What would you like to do?
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="{{ url_for('static', filename='images/books.webp') }}"
+            class="img-fluid mb-3"
+            alt="Manage Books"
+          />
+          <h5 class="card-title">Manage Books</h5>
+          <a href="{{ url_for('render.manage_books') }}" class="btn btn-primary"
+            >Go to Manage Books</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="{{ url_for('static', filename='images/sections.svg') }}"
+            class="img-fluid mb-3"
+            alt="Manage Sections"
+          />
+          <h5 class="card-title">Manage Sections</h5>
+          <a
+            href="{{ url_for('render.manage_section')}}"
+            class="btn btn-primary"
+            >Go to Manage Sections</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="{{ url_for('static', filename='images/user.png') }}"
+            class="img-fluid mb-3"
+            alt="Manage Users"
+          />
+          <h5 class="card-title">Manage Users</h5>
+          <a href="{{ url_for('render.manage_users') }}" class="btn btn-primary"
+            >Go to Manage Users</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img
+            src="{{ url_for('static', filename='images/requests.svg') }}"
+            class="img-fluid mb-3"
+            alt="Manage Requests"
+          />
+          <h5 class="card-title">Manage Requests</h5>
+          <a
+            href="{{ url_for('render.requests_page') }}"
+            class="btn btn-primary"
+            >Go to Manage Requests</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

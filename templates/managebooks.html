@@ -1,0 +1,377 @@
+{% extends 'basewithnav.html' %} {% block title %}Manage Books{% endblock %} {%
+block body %}
+<div class="d-flex justify-content-center align-items-center">
+  <div class="container">
+    <!-- Button group for add, edit, delete -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="btn-group-vertical" role="group">
+          <button
+            type="button"
+            class="btn btn-primary btn-block mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#addBookModal"
+          >
+            Add Book
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary btn-block mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#editBookModal"
+          >
+            Edit Book
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger btn-block"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteBookModal"
+          >
+            Delete Book
+          </button>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <!-- Table to display books -->
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Book ID</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Section ID</th>
+              <th>Description</th>
+              <th>Copies</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in books %}
+            <tr>
+              <td>{{ book[0] }}</td>
+              <td>{{ book[1] }}</td>
+              <td>{{ book[2] }}</td>
+              <td>{{ book[3] }}</td>
+              <td>{{ book[4] }}</td>
+              <td>{{ book[5] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals for add, edit, delete -->
+
+  <!-- Add Book Modal -->
+  <div
+    class="modal fade"
+    id="addBookModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="addBookModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Book</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="addBookForm" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="book">Upload Book</label>
+              <input
+                type="file"
+                class="form-control"
+                id="book"
+                name="book"
+                accept=".pdf"
+                onchange="updateTitle()"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="bookTitle">Title</label>
+              <input
+                type="text"
+                class="form-control"
+                id="bookTitle"
+                name="title"
+                value=""
+              />
+            </div>
+            <div class="form-group">
+              <label for="bookAuthor">Author</label>
+              <input
+                type="text"
+                class="form-control"
+                id="bookAuthor"
+                name="author"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="bookSection">Section ID</label>
+              <select
+                class="form-control"
+                id="bookSection"
+                name="section_id"
+                required
+              >
+                {% for section in sections %}
+                <option value="{{ section[0] }}">{{ section[1] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="bookDesc">Description</label>
+              <textarea
+                class="form-control"
+                id="bookDesc"
+                name="desc"
+                rows="3"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="bookCopies">Number of Copies</label>
+              <input
+                type="number"
+                class="form-control"
+                id="bookCopies"
+                name="copies"
+                min="1"
+                required
+              />
+            </div>
+            <!-- Hidden input for method -->
+            <input type="hidden" name="_method" value="POST" />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" form="addBookForm" class="btn btn-primary">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Book Modal -->
+  <div
+    class="modal fade"
+    id="editBookModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="editBookModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Book</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="editBookForm" method="POST">
+            <div class="form-group">
+              <label for="editBookId">Book ID</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editBookId"
+                name="edit_book_id"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editBookTitle">Title</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editBookTitle"
+                name="edit_book_title"
+              />
+            </div>
+            <div class="form-group">
+              <label for="editBookAuthor">Author</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editBookAuthor"
+                name="edit_book_author"
+              />
+            </div>
+            <div class="form-group">
+              <label for="editBookSection">Section ID</label>
+              <select
+                class="form-control"
+                id="editBookSection"
+                name="edit_book_section"
+              >
+                {% for section in sections %}
+                <option value="{{ section[0] }}">{{ section[1] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editBookDesc">Description</label>
+              <textarea
+                class="form-control"
+                id="editBookDesc"
+                name="edit_book_desc"
+                rows="3"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="editBookCopies">Number of Copies</label>
+              <input
+                type="number"
+                class="form-control"
+                id="editBookCopies"
+                name="edit_book_copies"
+                min="1"
+              />
+            </div>
+            <!-- Hidden input for method -->
+            <input type="hidden" name="_method" value="PUT" />
+            <input type="hidden" name="edit_book_id" id="editBookId" />
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" form="editBookForm" class="btn btn-primary">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Book Modal -->
+  <div
+    class="modal fade"
+    id="deleteBookModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="deleteBookModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Book</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this book?</p>
+          <p id="deleteBookName"></p>
+          <form id="deleteBookForm" method="POST">
+            <div class="form-group">
+              <label for="deleteBookId">Book ID</label>
+              <input
+                type="text"
+                class="form-control"
+                name="delete_book_id"
+                id="deleteBookId"
+                required
+              />
+              <!-- Hidden input for method -->
+              <input type="hidden" name="_method" value="DELETE" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" form="deleteBookForm" class="btn btn-danger">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    // Event listener for "Save changes" button in Add Book Modal
+    $("#addBookModal").on("shown.bs.modal", function () {
+      // Event listener for form submission
+      $("#addBookForm").submit(function (event) {
+        // This prevents the default form submission behavior
+        event.preventDefault();
+        // Submit the form traditionally
+        $(this).get(0).submit(); // This submits the form traditionally
+      });
+    });
+
+    // Event listener for "Save changes" button in Edit Book Modal
+    $("#editBookModal").on("shown.bs.modal", function () {
+      // Event listener for form submission
+      $("#editBookForm").submit(function (event) {
+        // This prevents the default form submission behavior
+        event.preventDefault();
+        // Submit the form traditionally
+        $(this).get(0).submit(); // This submits the form traditionally
+      });
+    });
+
+    // Event listener for "Save changes" button in Delete Book Modal
+    $("#deleteBookModal").on("shown.bs.modal", function () {
+      // Event listener for form submission
+      $("#deleteBookForm").submit(function (event) {
+        // This prevents the default form submission behavior
+        event.preventDefault();
+        // Submit the form traditionally
+        $(this).get(0).submit(); // This submits the form traditionally
+      });
+    });
+  });
+
+  function updateTitle() {
+    // Get the file input
+    var inputFile = document.getElementById("book");
+    // Get the file name without extension
+    var fileName = inputFile.files[0].name.replace(".pdf", "");
+    // Set the value of the title input
+    document.getElementById("bookTitle").value = fileName;
+  }
+</script>
+
+{% endblock %}

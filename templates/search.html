@@ -1,0 +1,66 @@
+{% extends 'basewithnav.html' %} {% block title %}Search {% endblock %} {% block
+body %}
+<div class="container">
+  <h1>Search Books</h1>
+  <form method="POST">
+    <div class="form-group">
+      <label for="title">Book Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        placeholder="Enter book title"
+      />
+    </div>
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input
+        type="text"
+        class="form-control"
+        id="author"
+        name="author"
+        placeholder="Enter author name"
+      />
+    </div>
+    <div class="form-group">
+      <label for="section">Section</label>
+      <input
+        type="text"
+        class="form-control"
+        id="section"
+        name="section"
+        placeholder="Enter section name"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <hr />
+
+  {% if books %}
+  <h2>Search Results</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Section ID</th>
+        <!-- Add more columns as needed -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book[1] }}</td>
+        <td>{{ book[2] }}</td>
+        <td>{{ book[3] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No books found.</p>
+  {% endif %}
+</div>
+{% endblock %}

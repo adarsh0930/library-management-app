@@ -1,0 +1,93 @@
+{% extends 'basewithnav.html' %} {% block title %}Profile{% endblock %} {% block
+body %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Profile</h2>
+      <form id="profile" method="post" action="/profile">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            value="{{ username }}"
+            disabled
+          />
+        </div>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            value="{{ name }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            value="{{ email }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea
+            class="form-control"
+            id="bio"
+            name="bio"
+            rows="3"
+            placeholder="Enter a short bio"
+          >
+{{ bio }}</textarea
+          >
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+    </div>
+  </div>
+  <!-- Display toast message if present -->
+  {% if toast_message %}
+  <div
+    class="toast align-items-center text fixed-bottom start-50 translate-middle-x text-bg-primary border-0"
+    role="alert"
+    aria-live="polite"
+    aria-atomic="true"
+    id="liveToast"
+    style="margin-bottom: 16px"
+  >
+    <div class="d-flex">
+      <div class="toast-body" id="liveToastBody"></div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+        id="liveToastClose"
+      ></button>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  window.onload = function () {
+    display_toast("{{ toast_message }}");
+  };
+  function display_toast(message) {
+    const toastLiveExample = document.getElementById("liveToast");
+    const toastLiveBody = document.getElementById("liveToastBody");
+    toastLiveBody.innerText = message;
+    const toastBootstrap =
+      bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+    console.log("Toast displayed");
+  }
+</script>
+{% endblock %}

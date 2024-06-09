@@ -1,0 +1,77 @@
+{% extends 'basewithnav.html' %} {% block title %}User Management{% endblock %}
+{% block body %}
+<div class="container">
+  <h2>User Management</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Bio</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user[0] }}</td>
+          <td>{{ user[1] }}</td>
+          <td>{{ user[3] }}</td>
+          <td>{{ user[4] }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#borrowsModal{{ user[0] }}"
+            >
+              Borrows
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modals for Borrows -->
+{% for user_id, borrows in borrows_data %}
+<div
+  id="borrowsModal{{ user_id }}"
+  class="modal fade"
+  tabindex="-1"
+  aria-labelledby="borrowsModalLabel{{ user_id }}"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="borrowsModalLabel{{ user_id }}">Borrows</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>User: {{ user_id }}</p>
+        <p>Books Borrowed:</p>
+        <ul>
+          {% for borrow in borrows %}
+          <li>{{ borrow[1] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %} {% endblock %}

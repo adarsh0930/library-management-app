@@ -1,0 +1,69 @@
+{% extends 'basewithnav.html' %} {% block title %}Book Requests{% endblock %} {%
+block body %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<div class="container">
+  <h1>Book Requests</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Borrow Date</th>
+        <th>Return Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for request in requests %}
+      <tr>
+        <td>{{ request[1] }}</td>
+        <td>{{ request[6] }}</td>
+        <td>{{ request[7] }}</td>
+        <td>{{ request[3] }}</td>
+        <td>{{ request[4] }}</td>
+        <td>
+          {% if request[5] == 0 %}
+          <form method="POST" id="issueform{{ request[1] }}-{{ request[2] }}">
+            <input type="hidden" name="username" value="{{ request[1] }}" />
+            <input type="hidden" name="request_id" value="{{ request[0] }}" />
+            <input type="hidden" name="action" value="ISSUE" />
+            <button type="submit" class="btn btn-success">Issue Book</button>
+          </form>
+          {% elif request[5] == 1 %}
+          <form method="POST" id="revokeform{{ request[1] }}-{{ request[2] }}">
+            <input type="hidden" name="username" value="{{ request[1] }}" />
+            <input type="hidden" name="book_id" value="{{ request[2] }}" />
+            <input type="hidden" name="action" value="REVOKE" />
+            <button type="submit" class="btn btn-danger">Revoke Book</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      <script>
+        // Event listener for form submission
+        $(document).ready(function () {
+          const formId = "#issueform{{ request[1] }}-{{ request[2] }}";
+          $(formId).submit(function (event) {
+            event.preventDefault();
+            // Log form data before submission
+            console.log("Request Form Data:", $(this).serialize());
+            // Submit the form
+            this.submit();
+          });
+
+          const revokeFormId = "#revokeform{{ request[1] }}-{{ request[2] }}";
+          $(revokeFormId).submit(function (event) {
+            event.preventDefault();
+            // Log form data before submission
+            console.log("Revoke Form Data:", $(this).serialize());
+            // Submit the form
+            this.submit();
+          });
+        });
+      </script>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
